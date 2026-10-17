@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum EstadoVenta {
+  PENDIENTE
+  PAGADA
+  ENVIADA
+  CANCELADA
+}
+
+model Producto {
+  id          Int       @id @default(autoincrement())
+  nombre      String
+  categoria   String
+  precio      Int       // en centavos: 19900 = $199.00
+  stock       Int       @default(0)
+  creadoEn    DateTime  @default(now())
+  eliminadoEn DateTime? // soft delete
+  ventas      Venta[]
+}
+
+model Cliente {
+  id       Int      @id @default(autoincrement())
+  nombre   String
+  email    String   @unique
+  ciudad   String
+  creadoEn DateTime @default(now())
+  ventas   Venta[]
+}
+
+model Venta {
+  id         Int         @id @default(autoincrement())
+  clienteId  Int
+  productoId Int
+  cantidad   Int
+  total      Int         // en centavos, guardado al momento de la venta
+  estado     EstadoVenta @default(PENDIENTE)
+  fecha      DateTime    @default(now())
+  cliente    Cliente     @relation(fields: [clienteId], references: [id])
+  producto   Producto    @relation(fields: [productoId], references: [id])
+
+  @@index([estado, fecha])
+}
