@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 
 export const proxy = auth((req) => {
   if (!req.auth) {
-    return NextResponse.redirect(new URL("/api/auth/signin", req.nextUrl.origin));
+    return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
   }
 });
 
