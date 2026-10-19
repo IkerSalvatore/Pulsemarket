@@ -49,6 +49,21 @@ export default function LoginPage({ searchParams }: { searchParams: SearchParams
             Continuar con GitHub
           </button>
         </form>
+
+        <form
+          className="mt-3"
+          action={async () => {
+            "use server";
+            await signIn("google", { redirectTo: "/dashboard" });
+          }}
+        >
+          <button
+            type="submit"
+            className="w-full rounded-md border px-4 py-2 font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            Continuar con Google
+          </button>
+        </form>
       </div>
     </main>
   );
